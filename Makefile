@@ -2,7 +2,9 @@
 # Distributed under the terms of the GNU General Public License v2
 
 DESTDIR =
-prefix = /usr
+rootprefix =
+gentoofuncs = $(rootprefix)/lib/gentoo/functions.sh
+prefix = $(rootprefix)/usr
 bindir = $(prefix)/bin
 libdirname = lib
 datadir = $(prefix)/share
@@ -16,6 +18,7 @@ eltpatch: eltpatch.in
 	rm -f $@ $@.tmp
 	sed -e 's^@ELT_patchdir@^$(patchdir)^' \
 		-e 's^@ELT_libdir@^$(libdirname)^' \
+		-e 's^@ELT_gentoofuncs@^$(gentoofuncs)^' \
 		$< > $@.tmp
 	chmod +x $@.tmp
 	mv $@.tmp $@

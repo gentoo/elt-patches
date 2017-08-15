@@ -2,7 +2,7 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
-source "/lib/gentoo/functions.sh" || exit 1
+source "@ELT_gentoofuncs@" || exit 1
 
 die() {
 	eerror "${@}"
