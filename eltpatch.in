@@ -2,6 +2,12 @@
 # Copyright 1999-2017 Gentoo Foundation
 # Distributed under the terms of the GNU General Public License v2
 
+# BSD support; https://bugs.gentoo.org/628882
+# note: this need to happen before function definitions
+type -P gfind &>/dev/null && alias find=gfind
+type -P gpatch &>/dev/null && alias patch=gpatch
+type -P gsed &>/dev/null && alias sed=gsed
+
 source "@ELT_gentoofuncs@" || exit 1
 
 die() {
