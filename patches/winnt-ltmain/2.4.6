@@ -1,0 +1,683 @@
+--- ltmain.sh
++++ ltmain.sh
+@@ -2416,11 +2416,11 @@
+     test : = "$debug_cmd" || func_append preserve_args " --debug"
+ 
+     case $host in
+       # Solaris2 added to fix http://debbugs.gnu.org/cgi/bugreport.cgi?bug=16452
+       # see also: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=59788
+-      *cygwin* | *mingw* | *pw32* | *cegcc* | *solaris2* | *os2*)
++      *cygwin* | *mingw* | *pw32* | *cegcc* | *solaris2* | *os2* | *winnt*)
+         # don't eliminate duplications in $postdeps and $predeps
+         opt_duplicate_compiler_generated_deps=:
+         ;;
+       *)
+         opt_duplicate_compiler_generated_deps=$opt_preserve_dup_deps
+@@ -3437,11 +3437,11 @@
+       removelist="$lobj $libobj ${libobj}T"
+     fi
+ 
+     # On Cygwin there's no "real" PIC flag so we must build both object types
+     case $host_os in
+-    cygwin* | mingw* | pw32* | os2* | cegcc*)
++    cygwin* | mingw* | pw32* | os2* | cegcc* | winnt*)
+       pic_mode=default
+       ;;
+     esac
+     if test no = "$pic_mode" && test pass_all != "$deplibs_check_method"; then
+       # non-PIC code in shared libraries is not supported
+@@ -4311,11 +4311,11 @@
+ 	  # Install the shared library and build the symlinks.
+ 	  func_show_eval "$install_shared_prog $dir/$srcname $destdir/$realname" \
+ 	      'exit $?'
+ 	  tstripme=$stripme
+ 	  case $host_os in
+-	  cygwin* | mingw* | pw32* | cegcc*)
++	  cygwin* | mingw* | pw32* | cegcc* | winnt*)
+ 	    case $realname in
+ 	    *.dll.a)
+ 	      tstripme=
+ 	      ;;
+ 	    esac
+@@ -4424,11 +4424,11 @@
+ 	    ;;
+ 	esac
+ 
+ 	# Do a test to see if this is really a libtool program.
+ 	case $host in
+-	*cygwin* | *mingw*)
++	*cygwin* | *mingw* | *winnt*)
+ 	    if func_ltwrapper_executable_p "$file"; then
+ 	      func_ltwrapper_scriptname "$file"
+ 	      wrapper=$func_ltwrapper_scriptname_result
+ 	    else
+ 	      func_stripname '' '.exe' "$file"
+@@ -4652,11 +4652,11 @@
+ 	    export_symbols=$output_objdir/$outputname.exp
+ 	    $opt_dry_run || {
+ 	      $RM $export_symbols
+ 	      eval "$SED -n -e '/^: @PROGRAM@ $/d' -e 's/^.* \(.*\)$/\1/p' "'< "$nlist" > "$export_symbols"'
+ 	      case $host in
+-	      *cygwin* | *mingw* | *cegcc* )
++	      *cygwin* | *mingw* | *cegcc*  | winnt*)
+                 eval "echo EXPORTS "'> "$output_objdir/$outputname.def"'
+                 eval 'cat "$export_symbols" >> "$output_objdir/$outputname.def"'
+ 	        ;;
+ 	      esac
+ 	    }
+@@ -4664,11 +4664,11 @@
+ 	    $opt_dry_run || {
+ 	      eval "$SED -e 's/\([].[*^$]\)/\\\\\1/g' -e 's/^/ /' -e 's/$/$/'"' < "$export_symbols" > "$output_objdir/$outputname.exp"'
+ 	      eval '$GREP -f "$output_objdir/$outputname.exp" < "$nlist" > "$nlist"T'
+ 	      eval '$MV "$nlist"T "$nlist"'
+ 	      case $host in
+-	        *cygwin* | *mingw* | *cegcc* )
++	        *cygwin* | *mingw* | *cegcc*  | winnt*)
+ 	          eval "echo EXPORTS "'> "$output_objdir/$outputname.def"'
+ 	          eval 'cat "$nlist" >> "$output_objdir/$outputname.def"'
+ 	          ;;
+ 	      esac
+ 	    }
+@@ -4678,11 +4678,11 @@
+ 	for dlprefile in $dlprefiles; do
+ 	  func_verbose "extracting global C symbols from '$dlprefile'"
+ 	  func_basename "$dlprefile"
+ 	  name=$func_basename_result
+           case $host in
+-	    *cygwin* | *mingw* | *cegcc* )
++	    *cygwin* | *mingw* | *cegcc* | *winnt* )
+ 	      # if an import library, we need to obtain dlname
+ 	      if func_win32_import_lib_p "$dlprefile"; then
+ 	        func_tr_sh "$dlprefile"
+ 	        eval "curr_lafile=\$libfile_$func_tr_sh_result"
+ 	        dlprefile_dlbasename=
+@@ -4705,11 +4705,11 @@
+ 	            func_warning "Could not compute DLL name from $name"
+ 	            eval '$ECHO ": $name " >> "$nlist"'
+ 	          fi
+ 	          func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
+ 	          eval "$NM \"$func_to_tool_file_result\" 2>/dev/null | $global_symbol_pipe |
+-	            $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/_nm__//' >> '$nlist'"
++	            $SED -e '/I __imp/d' -e 's/I __nm_/D /;s/ __nm_/ /' >> '$nlist'"
+ 	        }
+ 	      else # not an import lib
+ 	        $opt_dry_run || {
+ 	          eval '$ECHO ": $name " >> "$nlist"'
+ 	          func_to_tool_file "$dlprefile" func_convert_file_msys_to_w32
+@@ -4853,11 +4853,11 @@
+ 	func_show_eval '$RM "$output_objdir/$my_dlsyms" "$nlist" "${nlist}S" "${nlist}T" "${nlist}I"'
+ 
+ 	# Transform the symbol file into the correct name.
+ 	symfileobj=$output_objdir/${my_outputname}S.$objext
+ 	case $host in
+-	*cygwin* | *mingw* | *cegcc* )
++	*cygwin* | *mingw* | *cegcc*  | winnt*)
+ 	  if test -f "$output_objdir/$my_outputname.def"; then
+ 	    compile_command=`$ECHO "$compile_command" | $SED "s%@SYMFILE@%$output_objdir/$my_outputname.def $symfileobj%"`
+ 	    finalize_command=`$ECHO "$finalize_command" | $SED "s%@SYMFILE@%$output_objdir/$my_outputname.def $symfileobj%"`
+ 	  else
+ 	    compile_command=`$ECHO "$compile_command" | $SED "s%@SYMFILE@%$symfileobj%"`
+@@ -4921,18 +4921,18 @@
+ func_win32_libid ()
+ {
+   $debug_cmd
+ 
+   win32_libid_type=unknown
+-  win32_fileres=`file -L $1 2>/dev/null`
++  win32_fileres=`file -L "$1" 2>/dev/null`
+   case $win32_fileres in
+   *ar\ archive\ import\ library*) # definitely import
+     win32_libid_type="x86 archive import"
+     ;;
+   *ar\ archive*) # could be an import, or static
+     # Keep the egrep pattern in sync with the one in _LT_CHECK_MAGIC_METHOD.
+-    if eval $OBJDUMP -f $1 | $SED -e '10q' 2>/dev/null |
++    if eval $OBJDUMP -f \"\$1\" | $SED -e '10q' 2>/dev/null |
+        $EGREP 'file format (pei*-i386(.*architecture: i386)?|pe-arm-wince|pe-x86-64)' >/dev/null; then
+       case $nm_interface in
+       "MS dumpbin")
+ 	if func_cygming_ms_implib_p "$1" ||
+ 	   func_cygming_gnu_implib_p "$1"
+@@ -4944,16 +4944,14 @@
+ 	;;
+       *)
+ 	func_to_tool_file "$1" func_convert_file_msys_to_w32
+ 	win32_nmres=`eval $NM -f posix -A \"$func_to_tool_file_result\" |
+ 	  $SED -n -e '
+-	    1,100{
+-		/ I /{
+-		    s|.*|import|
+-		    p
+-		    q
+-		}
++	    / I /{
++		s|.*|import|
++		p
++		q
+ 	    }'`
+ 	;;
+       esac
+       case $win32_nmres in
+       import*)  win32_libid_type="x86 archive import";;
+@@ -5328,11 +5326,11 @@
+ func_exec_program_core ()
+ {
+ "
+   case $host in
+   # Backslashes separate directories on plain windows
+-  *-*-mingw | *-*-os2* | *-cegcc*)
++  *-*-mingw | *-*-os2* | *-cegcc* | *-*-winnt*)
+     $ECHO "\
+       if test -n \"\$lt_option_debug\"; then
+         \$ECHO \"$outputname:$output:\$LINENO: newargv[0]: \$progdir\\\\\$program\" 1>&2
+         func_lt_dump_args \${1+\"\$@\"} 1>&2
+       fi
+@@ -5751,11 +5749,11 @@
+     {
+       if (STREQ (argv[i], dumpscript_opt))
+ 	{
+ EOF
+ 	    case $host in
+-	      *mingw* | *cygwin* )
++	      *mingw* | *cygwin* | *winnt*)
+ 		# make stdout use "unix" line endings
+ 		echo "          setmode(1,_O_BINARY);"
+ 		;;
+ 	      esac
+ 
+@@ -5854,11 +5852,11 @@
+   XFREE (tmp_pathspec);
+   tmp_pathspec = NULL;
+ EOF
+ 
+ 	    case $host_os in
+-	      mingw*)
++	      mingw* | winnt*)
+ 	    cat <<"EOF"
+   {
+     char* p;
+     while ((p = strchr (newargz[0], '\\')) != NULL)
+       {
+@@ -5896,11 +5894,11 @@
+     }
+ 
+ EOF
+ 
+ 	    case $host_os in
+-	      mingw*)
++	      mingw* | winnt*)
+ 		cat <<"EOF"
+   /* execv doesn't actually work on mingw as expected on unix */
+   newargz = prepare_spawn (newargz);
+   rval = (int) _spawnv (_P_WAIT, lt_argv_zero, (const char * const *) newargz);
+   if (rval == -1)
+@@ -6315,11 +6313,11 @@
+     }
+ }
+ 
+ EOF
+ 	    case $host_os in
+-	      mingw*)
++	      mingw* | winnt*)
+ 		cat <<"EOF"
+ 
+ /* Prepares an argument vector before calling spawn().
+    Note that spawn() does not by itself call the command interpreter
+      (getenv ("COMSPEC") != NULL ? getenv ("COMSPEC") :
+@@ -6490,11 +6488,11 @@
+ func_mode_link ()
+ {
+     $debug_cmd
+ 
+     case $host in
+-    *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc*)
++    *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc* | *-*-winnt*)
+       # It is impossible to link a dll without this setting, and
+       # we shouldn't force the makefile maintainer to figure out
+       # what system we are compiling for in order to pass an extra
+       # flag for every libtool invocation.
+       # allow_undefined=no
+@@ -6605,10 +6603,13 @@
+     done
+ 
+     # See if our shared archives depend on static archives.
+     test -n "$old_archive_from_new_cmds" && build_old_libs=yes
+ 
++    eval sys_lib_search_path=\"$sys_lib_search_path_spec\"
++    eval sys_lib_dlsearch_path=\"$sys_lib_dlsearch_path_spec\"
++
+     # Go through the arguments, transforming them on the way.
+     while test "$#" -gt 0; do
+       arg=$1
+       shift
+       func_quote_for_eval "$arg"
+@@ -6989,11 +6990,11 @@
+ 	  esac
+ 	  func_append lib_search_path " $dir"
+ 	  ;;
+ 	esac
+ 	case $host in
+-	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc*)
++	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc* | *-*-winnt*)
+ 	  testbindir=`$ECHO "$dir" | $SED 's*/lib$*/bin*'`
+ 	  case :$dllsearchpath: in
+ 	  *":$dir:"*) ;;
+ 	  ::) dllsearchpath=$dir;;
+ 	  *) func_append dllsearchpath ":$dir";;
+@@ -7009,11 +7010,11 @@
+ 	;;
+ 
+       -l*)
+ 	if test X-lc = "X$arg" || test X-lm = "X$arg"; then
+ 	  case $host in
+-	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-beos* | *-cegcc* | *-*-haiku*)
++	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-beos* | *-cegcc* | *-*-haiku* | *-*-winnt*)
+ 	    # These systems don't actually have a C or math library (as such)
+ 	    continue
+ 	    ;;
+ 	  *-*-os2*)
+ 	    # These systems don't actually have a C library (as such)
+@@ -7092,11 +7093,11 @@
+ 	continue
+ 	;;
+ 
+       -no-install)
+ 	case $host in
+-	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-darwin* | *-cegcc*)
++	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-darwin* | *-cegcc* | *-*-winnt*)
+ 	  # The PATH hackery in wrapper scripts is required on Windows
+ 	  # and Darwin in order for the loader to find any dlls it needs.
+ 	  func_warning "'-no-install' is ignored for $host"
+ 	  func_warning "assuming '-no-fast-install' instead"
+ 	  fast_install=no
+@@ -7396,13 +7397,64 @@
+ 	  fi
+ 	fi
+ 	;;
+ 
+       *.$libext)
+-	# An archive.
+-	func_append deplibs " $arg"
+-	func_append old_deplibs " $arg"
++	# With MSVC cl.exe, even dynamic deplibs are added as NAME.lib,
++	# so we need to distinguish based on their file type whether we
++	# have to treat them as static archive or dynamic import lib.
++	found=
++	case $linkmode,$arg in
++	*,*[\\/]*)
++	  searchdirs=
++	  if test -f "$arg"; then
++	    found=$arg
++	  fi
++	  ;;
++	lib,*)
++	  searchdirs="$newlib_search_path $lib_search_path $compiler_lib_search_dirs $sys_lib_search_path $shlib_search_path"
++	  ;;
++	*)
++	  searchdirs="$newlib_search_path $lib_search_path $sys_lib_search_path $shlib_search_path"
++	  ;;
++	esac
++	for searchdir in $searchdirs; do
++	  if test -f "$searchdir/$arg"; then
++	    found=$searchdir/$arg
++	    break
++	  fi
++	done
++	case $found,$deplibs_check_method in
++	,*) ;; # nothing found
++	*,file_magic*)
++	  file_magic_regex=`set dummy $deplibs_check_method; shift
++	    expr "$deplibs_check_method" : "\$1 \(.*\)"`
++	  while test -h "$found" 2>/dev/null; do
++	    # Follow soft links.
++	    if ls -lLd "$found" 2>/dev/null |
++	       $GREP " -> " >/dev/null; then
++	      break # found a soft link cycle
++	    fi
++	    foundlink=`ls -ld "$found" | $SED 's/.* -> //'`
++	    case $foundlink in
++	    [\\/]* | [A-Za-z]:[\\/]*) found=$foundlink;;
++	    *) found=`$ECHO "$found" | $SED 's|[^/]*$||'`"$foundlink";;
++	    esac
++	  done
++	  if eval $file_magic_cmd \"\$found\" |
++	     $SED -e 10q |
++	     $EGREP "$file_magic_regex" > /dev/null; then
++	    found=implib
++	  fi
++	  ;;
++	esac
++	if test implib = "$found"; then
++	  func_append deplibs " $arg"
++	else
++	  func_append deplibs " $arg"
++	  func_append old_deplibs " $arg"
++	fi
+ 	continue
+ 	;;
+ 
+       *.la)
+ 	# A libtool-controlled library.
+@@ -7457,12 +7509,10 @@
+       # get the directories listed in $shlibpath_var
+       eval shlib_search_path=\`\$ECHO \"\$$shlibpath_var\" \| \$SED \'s/:/ /g\'\`
+     else
+       shlib_search_path=
+     fi
+-    eval sys_lib_search_path=\"$sys_lib_search_path_spec\"
+-    eval sys_lib_dlsearch_path=\"$sys_lib_dlsearch_path_spec\"
+ 
+     # Definition is injected by LT_CONFIG during libtool generation.
+     func_munge_path_list sys_lib_dlsearch_path "$LT_SYS_LIBRARY_PATH"
+ 
+     func_dirname "$output" "/" ""
+@@ -7625,21 +7675,36 @@
+ 	    func_warning "'-l' is ignored for archives/objects"
+ 	    continue
+ 	  fi
+ 	  func_stripname '-l' '' "$deplib"
+ 	  name=$func_stripname_result
++	  release_save=$release
++	  major_save=$major
++	  versuffix_save=$versuffix
++	  module_save=$module
++	  release=
++	  major=
++	  versuffix=
++	  module=no
++	  eval shared_ext=\"$shrext_cmds\"
++	  eval libname=\"$libname_spec\"
++	  eval search_names=\"lib$name.la $library_names_spec lib$name$shared_ext lib$name.so $libname.$libext lib$name.$libext lib$name.a\"
++	  release=$release_save
++	  major=$major_save
++	  versuffix=$versuffix_save
++	  module=$module_save
+ 	  if test lib = "$linkmode"; then
+ 	    searchdirs="$newlib_search_path $lib_search_path $compiler_lib_search_dirs $sys_lib_search_path $shlib_search_path"
+ 	  else
+ 	    searchdirs="$newlib_search_path $lib_search_path $sys_lib_search_path $shlib_search_path"
+ 	  fi
+ 	  for searchdir in $searchdirs; do
+-	    for search_ext in .la $std_shrext .so .a; do
++	    for search_name in $search_names; do
+ 	      # Search the libtool library
+-	      lib=$searchdir/lib$name$search_ext
++	      lib=$searchdir/$search_name
+ 	      if test -f "$lib"; then
+-		if test .la = "$search_ext"; then
++		if test "lib$name.la" = "$search_name"; then
+ 		  found=:
+ 		else
+ 		  found=false
+ 		fi
+ 		break 2
+@@ -7765,38 +7830,82 @@
+ 	    # Linking convenience modules into shared libraries is allowed,
+ 	    # but linking other static libraries is non-portable.
+ 	    case " $dlpreconveniencelibs " in
+ 	    *" $deplib "*) ;;
+ 	    *)
+-	      valid_a_lib=false
++	      valid_a_lib=no
+ 	      case $deplibs_check_method in
+ 		match_pattern*)
+ 		  set dummy $deplibs_check_method; shift
+ 		  match_pattern_regex=`expr "$deplibs_check_method" : "$1 \(.*\)"`
+ 		  if eval "\$ECHO \"$deplib\"" 2>/dev/null | $SED 10q \
+ 		    | $EGREP "$match_pattern_regex" > /dev/null; then
+-		    valid_a_lib=:
++		    valid_a_lib=warn
+ 		  fi
+ 		;;
+ 		pass_all)
+-		  valid_a_lib=:
++		  valid_a_lib=warn
++		;;
++		file_magic*)
++		  # Check for import lib having .$libext.
++		  potlib=
++		  case $deplib in
++		    */* | *\\*)
++		      potlib=$deplib
++		      ;;
++		    *)
++		      searchdirs="$newlib_search_path $lib_search_path $compiler_lib_search_dirs $sys_lib_search_path $shlib_search_path"
++		      for searchdir in $searchdirs; do
++		        test -e "$searchdir/$deplib" || continue
++			potlib="$searchdir/$deplib"
++			break
++		      done
++		    ;;
++		  esac
++		  while test -h "$potlib" 2>/dev/null; do
++		    # Follow soft links.
++		    if ls -lLd "$potlib" 2>/dev/null |
++		       $GREP " -> " >/dev/null; then
++		      break # found a soft link cycle
++		    fi
++		    potliblink=`ls -ld "$potlib" | $SED 's/.* -> //'`
++		    case $potliblink in
++		    [\\/]* | [A-Za-z]:[\\/]*) potlib=$potliblink;;
++		    *) potlib=`$ECHO "$potlib" | $SED 's|[^/]*$||'`"$potliblink";;
++		    esac
++		  done
++		  set dummy $deplibs_check_method; shift
++		  file_magic_regex=`expr "$deplibs_check_method" : "$1 \(.*\)"`
++		  if eval $file_magic_cmd \"\$potlib\" 2>/dev/null |
++		     $SED -e 10q |
++		     $EGREP "$file_magic_regex" > /dev/null; then
++		    valid_a_lib=yes
++		  fi
+ 		;;
+ 	      esac
+-	      if $valid_a_lib; then
++	      case $valid_a_lib in
++	      yes)
++		# handle like a shared lib with -lNAME
++		deplibs="$deplib $deplibs"
++		newdependency_libs="$deplib $newdependency_libs"
++		;;
++	      warn)
+ 		echo
+ 		$ECHO "*** Warning: Linking the shared library $output against the"
+ 		$ECHO "*** static library $deplib is not portable!"
+ 		deplibs="$deplib $deplibs"
+-	      else
++	        ;;
++	      *)
+ 		echo
+ 		$ECHO "*** Warning: Trying to link with static lib archive $deplib."
+ 		echo "*** I have the capability to make that library automatically link in when"
+ 		echo "*** you link to this library.  But I can only do this if you have a"
+ 		echo "*** shared version of the library, which you do not appear to have"
+ 		echo "*** because the file extensions .$libext of this argument makes me believe"
+ 		echo "*** that it is just a static archive that I should not use here."
+-	      fi
++		;;
++	      esac
+ 	      ;;
+ 	    esac
+ 	    continue
+ 	    ;;
+ 	  prog)
+@@ -7986,11 +8095,11 @@
+ 	  if test -z "$libdir" && test prog = "$linkmode"; then
+ 	    func_fatal_error "only libraries may -dlpreopen a convenience library: '$lib'"
+ 	  fi
+ 	  case $host in
+ 	    # special handling for platforms with PE-DLLs.
+-	    *cygwin* | *mingw* | *cegcc* )
++	    *cygwin* | *mingw* | *cegcc* | *winnt* )
+ 	      # Linker will automatically link against shared library if both
+ 	      # static and shared are present.  Therefore, ensure we extract
+ 	      # symbols from the import library if a shared library is present
+ 	      # (otherwise, the dlopen module name will be incorrect).  We do
+ 	      # this by putting the import library name into $newdlprefiles.
+@@ -8130,11 +8239,11 @@
+ 	  use_static_libs=no
+ 	fi
+ 	if test -n "$library_names" &&
+ 	   { test no = "$use_static_libs" || test -z "$old_library"; }; then
+ 	  case $host in
+-	  *cygwin* | *mingw* | *cegcc* | *os2*)
++	  *cygwin* | *mingw* | *cegcc* | *os2* | *winnt*)
+ 	      # No point in relinking DLLs because paths are not encoded
+ 	      func_append notinst_deplibs " $lib"
+ 	      need_relink=no
+ 	    ;;
+ 	  *)
+@@ -8200,11 +8309,11 @@
+ 	    if test -n "$dlname"; then
+ 	      soname=$dlname
+ 	    elif test -n "$soname_spec"; then
+ 	      # bleh windows
+ 	      case $host in
+-	      *cygwin* | mingw* | *cegcc* | *os2*)
++	      *cygwin* | mingw* | *cegcc* | *os2* | winnt*)
+ 	        func_arith $current - $age
+ 		major=$func_arith_result
+ 		versuffix=-$major
+ 		;;
+ 	      esac
+@@ -9110,11 +9219,11 @@
+       done
+ 
+       if test yes = "$build_libtool_libs"; then
+ 	if test -n "$rpath"; then
+ 	  case $host in
+-	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-beos* | *-cegcc* | *-*-haiku*)
++	  *-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-*-beos* | *-cegcc* | *-*-haiku* | *-*-winnt*)
+ 	    # these systems don't actually have a c library (as such)!
+ 	    ;;
+ 	  *-*-rhapsody* | *-*-darwin1.[012])
+ 	    # Rhapsody C library is in the System framework
+ 	    func_append deplibs " System.ltframework"
+@@ -9280,24 +9389,33 @@
+ 		  a_deplib=
+ 		  ;;
+ 		esac
+ 	      fi
+ 	      if test -n "$a_deplib"; then
+-		libname=`eval "\\$ECHO \"$libname_spec\""`
++		module_save=$module
++		module=no
++		eval shared_ext=\"$shrext_cmds\"
++		eval libname=\"$libname_spec\"
++		eval search_names=\"$library_names_spec\"
++		module=$module_save
+ 		if test -n "$file_magic_glob"; then
+ 		  libnameglob=`func_echo_all "$libname" | $SED -e $file_magic_glob`
+ 		else
+ 		  libnameglob=$libname
+ 		fi
+ 		test yes = "$want_nocaseglob" && nocaseglob=`shopt -p nocaseglob`
+ 		for i in $lib_search_path $sys_lib_search_path $shlib_search_path; do
++		  potential_libs=
++		  for search_name in $search_names; do
++		    potential_libs="$potential_libs `ls $i/$search_name 2>/dev/null`"
++		  done
+ 		  if test yes = "$want_nocaseglob"; then
+ 		    shopt -s nocaseglob
+-		    potential_libs=`ls $i/$libnameglob[.-]* 2>/dev/null`
++		    potential_libs="$potential_libs `ls $i/$libnameglob[.-]* 2>/dev/null`"
+ 		    $nocaseglob
+ 		  else
+-		    potential_libs=`ls $i/$libnameglob[.-]* 2>/dev/null`
++		    potential_libs="$potential_libs `ls $i/$libnameglob[.-]* 2>/dev/null`"
+ 		  fi
+ 		  for potent_lib in $potential_libs; do
+ 		      # Follow soft links.
+ 		      if ls -lLd "$potent_lib" 2>/dev/null |
+ 			 $GREP " -> " >/dev/null; then
+@@ -9308,11 +9426,11 @@
+ 		      # We might still enter an endless loop, since a link
+ 		      # loop can be closed while we follow links,
+ 		      # but so what?
+ 		      potlib=$potent_lib
+ 		      while test -h "$potlib" 2>/dev/null; do
+-			potliblink=`ls -ld $potlib | $SED 's/.* -> //'`
++			potliblink=`ls -ld "$potlib" | $SED 's/.* -> //'`
+ 			case $potliblink in
+ 			[\\/]* | [A-Za-z]:[\\/]*) potlib=$potliblink;;
+ 			*) potlib=`$ECHO "$potlib" | $SED 's|[^/]*$||'`"$potliblink";;
+ 			esac
+ 		      done
+@@ -9624,11 +9742,11 @@
+ 	  func_append delfiles " $export_symbols"
+ 	fi
+ 
+ 	orig_export_symbols=
+ 	case $host_os in
+-	cygwin* | mingw* | cegcc*)
++	cygwin* | mingw* | cegcc* | winnt*)
+ 	  if test -n "$export_symbols" && test -z "$export_symbols_regex"; then
+ 	    # exporting using user supplied symfile
+ 	    func_dll_def_p "$export_symbols" || {
+ 	      # and it's NOT already a .def file. Must figure out
+ 	      # which of the given symbols are data symbols and tag
+@@ -10294,11 +10412,11 @@
+ 	  *" $libdir "*) ;;
+ 	  *) func_append perm_rpath " $libdir" ;;
+ 	  esac
+ 	fi
+ 	case $host in
+-	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc*)
++	*-*-cygwin* | *-*-mingw* | *-*-pw32* | *-*-os2* | *-cegcc* | *-*-winnt*)
+ 	  testbindir=`$ECHO "$libdir" | $SED -e 's*/lib$*/bin*'`
+ 	  case :$dllsearchpath: in
+ 	  *":$libdir:"*) ;;
+ 	  ::) dllsearchpath=$libdir;;
+ 	  *) func_append dllsearchpath ":$libdir";;
+@@ -10372,11 +10490,11 @@
+       case $host in
+       *cegcc* | *mingw32ce*)
+         # Disable wrappers for cegcc and mingw32ce hosts, we are cross compiling anyway.
+         wrappers_required=false
+         ;;
+-      *cygwin* | *mingw* )
++      *cygwin* | *mingw* | *winnt* )
+         test yes = "$build_libtool_libs" || wrappers_required=false
+         ;;
+       *)
+         if test no = "$need_relink" || test yes != "$build_libtool_libs"; then
+           wrappers_required=false
+@@ -10525,11 +10643,11 @@
+ 	    func_stripname '' '.exe' "$outputname"
+ 	    outputname=$func_stripname_result ;;
+ 	  *) exeext= ;;
+ 	esac
+ 	case $host in
+-	  *cygwin* | *mingw* )
++	  *cygwin* | *mingw* | *winnt* )
+ 	    func_dirname_and_basename "$output" "" "."
+ 	    output_name=$func_basename_result
+ 	    output_path=$func_dirname_result
+ 	    cwrappersource=$output_path/$objdir/lt-$output_name.c
+ 	    cwrapper=$output_path/$output_name.exe
+@@ -10552,11 +10670,12 @@
+ 	    $RM $func_ltwrapper_scriptname_result
+ 	    trap "$RM $func_ltwrapper_scriptname_result; exit $EXIT_FAILURE" 1 2 15
+ 	    $opt_dry_run || {
+ 	      # note: this script will not be executed, so do not chmod.
+ 	      if test "x$build" = "x$host"; then
+-		$cwrapper --lt-dump-script > $func_ltwrapper_scriptname_result
++		# the running shell may be a Cygwin shell using binmode
++		$cwrapper --lt-dump-script | $SED -e "s/\\r//g" > $func_ltwrapper_scriptname_result
+ 	      else
+ 		func_emit_wrapper no > $func_ltwrapper_scriptname_result
+ 	      fi
+ 	    }
+ 	  ;;
+@@ -10857,11 +10976,11 @@
+ 	  # applies here; at the moment, that means platforms that use the PE
+ 	  # object format with DLL files.  See the long comment at the top of
+ 	  # tests/bindir.at for full details.
+ 	  tdlname=$dlname
+ 	  case $host,$output,$installed,$module,$dlname in
+-	    *cygwin*,*lai,yes,no,*.dll | *mingw*,*lai,yes,no,*.dll | *cegcc*,*lai,yes,no,*.dll)
++	    *cygwin*,*lai,yes,no,*.dll | *mingw*,*lai,yes,no,*.dll | *cegcc*,*lai,yes,no,*.dll | *winnt*,*lai,yes,no,*.dll)
+ 	      # If a -bindir argument was supplied, place the dll there.
+ 	      if test -n "$bindir"; then
+ 		func_relative_path "$install_libdir" "$bindir"
+ 		tdlname=$func_relative_path_result/$dlname
+ 	      else

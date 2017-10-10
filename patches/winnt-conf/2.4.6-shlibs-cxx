@@ -1,0 +1,33 @@
+--- configure
++++ configure
+@@ -15286,10 +15409,16 @@
+ 	  ld_shlibs_CXX=no
+ 	  ;;
+         esac
+         ;;
+ 
++      winnt*)
++	archive_cmds_CXX='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags -o $output_objdir/$soname -Wl,--out-implib,$lib'
++	archive_cmds_need_lc_CXX=no
++	allow_undefined_flag_CXX=unsupported
++	;;
++
+       cygwin* | mingw* | pw32* | cegcc*)
+ 	case $GXX,$cc_basename in
+ 	,cl* | no,cl*)
+ 	  # Native MSVC
+ 	  # hardcode_libdir_flag_spec is actually meaningless, as there is
+@@ -16860,10 +16994,13 @@
+     fi
+     ;;
+   pw32*)
+     export_symbols_cmds_CXX=$ltdll_cmds
+     ;;
++  winnt*)
++    exclude_expsyms_CXX='__NULL_IMPORT_DESCRIPTOR|__IMPORT_DESCRIPTOR_.*'
++    ;;
+   cygwin* | mingw* | cegcc*)
+     case $cc_basename in
+     cl*)
+       exclude_expsyms_CXX='_NULL_IMPORT_DESCRIPTOR|_IMPORT_DESCRIPTOR_.*'
+       ;;

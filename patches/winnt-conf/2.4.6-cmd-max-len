@@ -1,0 +1,15 @@
+--- configure
++++ configure
+@@ -5915,11 +5915,11 @@
+     # And add a safety zone
+     lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \/ 4`
+     lt_cv_sys_max_cmd_len=`expr $lt_cv_sys_max_cmd_len \* 3`
+     ;;
+ 
+-  interix*)
++  interix* | winnt*)
+     # We know the value 262144 and hardcode it with a safety zone (like BSD)
+     lt_cv_sys_max_cmd_len=196608
+     ;;
+ 
+   os2*)

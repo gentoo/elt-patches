@@ -1,0 +1,19 @@
+--- configure
++++ configure
+@@ -9709,10 +9737,16 @@
+ 	lt_prog_compiler_static='$wl-static'
+ 	;;
+       esac
+       ;;
+ 
++    winnt*)
++      lt_prog_compiler_pic='-DDLL_EXPORT'
++      lt_prog_compiler_wl='-Wl,'
++      lt_prog_compiler_static='-static'
++      ;;
++
+     hpux9* | hpux10* | hpux11*)
+       lt_prog_compiler_wl='-Wl,'
+       # PIC is the default for IA64 HP-UX and 64-bit HP-UX, but
+       # not for PA HP-UX.
+       case $host_cpu in

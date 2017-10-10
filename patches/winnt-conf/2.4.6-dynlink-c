@@ -1,0 +1,46 @@
+--- configure
++++ configure
+@@ -11890,10 +11967,43 @@
+   # the default ld.so.conf also contains /usr/contrib/lib and
+   # /usr/X11R6/lib (/usr/X11 is a link to /usr/X11R6), but let us allow
+   # libtool to hard-code these into programs
+   ;;
+ 
++winnt*)
++  # The real dll is NAME.dll,
++  # the import lib is NAME.lib, but
++  # the static lib is libNAME.lib, which requires libname_spec=lib$name.
++  # Upon /path/to/*.lib, we use deplibs_check_method=file_magic to
++  # accept NAME.lib as import lib, but reject static libNAME.lib.
++  libext=lib
++  version_type=windows
++  need_version=no
++  need_lib_prefix=no
++  shrext_cmds=.dll
++  library_names_spec='${libname#lib}.$libext'
++  soname_spec='${libname#lib}$release$versuffix$shared_ext'
++  sys_lib_dlsearch_path_spec=
++  shlibpath_var=PATH
++  shlibpath_overrides_runpath=yes
++  # DLL is installed to $(libdir)/../bin by postinstall_cmds
++  postinstall_cmds='base_file=`basename \$file`~
++    dlpath=`$SHELL 2>&1 -c '\''. $dir/'\''\$base_file'\''i; echo \$dlname'\''`~
++    dldir=$destdir/`dirname \$dlpath`~
++    test -d \$dldir || mkdir -p \$dldir~
++    $install_prog $dir/$dlname \$dldir/$dlname~
++    chmod a+x \$dldir/$dlname~
++    if test -f $dir/${dlname%.dll}.pdb; then $install_prog $dir/${dlname%.dll}.pdb \$dldir/${dlname%.dll}.pdb; fi~
++    if test -n '\''$stripme'\'' && test -n '\''$striplib'\''; then
++      eval '\''$striplib \$dldir/$dlname'\'' || exit \$?;
++    fi'
++  postuninstall_cmds='dldll=`$SHELL 2>&1 -c '\''. $file; echo \$dlname'\''`~
++    dlpath=$dir/\$dldll~
++    func_append rmfiles " \$dlpath \${dlpath%.dll}.pdb"'
++  dynamic_linker='Win32 link.exe with Parity extensions'
++  ;;
++
+ cygwin* | mingw* | pw32* | cegcc*)
+   version_type=windows
+   shrext_cmds=.dll
+   need_version=no
+   need_lib_prefix=no

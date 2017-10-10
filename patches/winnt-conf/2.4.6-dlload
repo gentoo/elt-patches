@@ -1,0 +1,15 @@
+--- configure
++++ configure
+@@ -13596,11 +13716,11 @@
+ 
+   ;;
+ beos*)
+   LT_DLLOADERS="$LT_DLLOADERS ${lt_dlopen_dir+$lt_dlopen_dir/}load_add_on.la"
+   ;;
+-cygwin* | mingw* | pw32*)
++cygwin* | mingw* | pw32* | winnt*)
+   ac_fn_c_check_decl "$LINENO" "cygwin_conv_path" "ac_cv_have_decl_cygwin_conv_path" "#include <sys/cygwin.h>
+ "
+ if test "x$ac_cv_have_decl_cygwin_conv_path" = xyes; then :
+   ac_have_decl=1
+ else

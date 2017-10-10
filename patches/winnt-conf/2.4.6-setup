@@ -1,0 +1,23 @@
+--- configure
++++ configure
+@@ -9208,10 +9226,20 @@
+ 
+ 
+ 
+ 
+ 
++# On winnt, the Microsoft compiler (or compatible) is used behind the scenes.
++# While wrappers around it may be capable of resolving symbolic links, the
++# compiler (cl.exe) chokes on header files which are symlinked, as the
++# wrapper cannot know about them.
++# Everybody would be happy with ln -s, except libtoolize without --copy.
++# There ln -s breaks the testsuite, since it tries to compile symlinked
++# source, which is not supported by the compiler.
++case $LN_S,$host_os in
++,winnt*|"ln -s",winnt*) LN_S="cp -p" ;;
++esac
+ test -z "$LN_S" && LN_S="ln -s"
+ 
+ 
+ 
+ 

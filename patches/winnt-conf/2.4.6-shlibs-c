@@ -1,0 +1,20 @@
+--- configure
++++ configure
+@@ -10855,10 +10889,17 @@
+ 
+     bsdi[45]*)
+       export_dynamic_flag_spec=-rdynamic
+       ;;
+ 
++    winnt*)
++      exclude_expsyms='__NULL_IMPORT_DESCRIPTOR|__IMPORT_DESCRIPTOR_.*'
++      archive_cmds='$CC -shared $pic_flag $libobjs $deplibs $compiler_flags -o $output_objdir/$soname -Wl,--out-implib,$lib'
++      archive_cmds_need_lc=no
++      allow_undefined_flag=unsupported
++      ;;
++
+     cygwin* | mingw* | pw32* | cegcc*)
+       # When not using gcc, we currently assume that we are using
+       # Microsoft Visual C++.
+       # hardcode_libdir_flag_spec is actually meaningless, as there is
+       # no search path for DLLs.

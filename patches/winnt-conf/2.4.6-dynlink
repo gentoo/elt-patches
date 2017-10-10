@@ -1,0 +1,46 @@
+--- configure
++++ configure
+@@ -11728,10 +11769,43 @@
+       $SED 's|/\([A-Za-z]:\)|\1|g'` ;;
+   esac
+   sys_lib_search_path_spec=`$ECHO "$lt_search_path_spec" | $lt_NL2SP`
+ else
+   sys_lib_search_path_spec="/lib /usr/lib /usr/local/lib"
++  case $host_os in
++  winnt*)
++    sys_lib_search_path_spec=`$CC -print-search-dirs |
++      $AWK '/^libraries:/{sub(/^libraries: *=?/,""); print}'`
++    # The space separated shell string breaks on characters like blanks and
++    # parentheses often found in Windows directory names.  Fortunately, the
++    # 8.3 DOS format does not use these characters, but that might be disabled.
++    # First, convert to 8.3 DOS format to remove invalid characters eventually.
++    sys_lib_search_path_spec=`cygpath --path --dos "$sys_lib_search_path_spec"`
++    # Second, converting back to unix format does preserve 8.3 path parts.
++    sys_lib_search_path_spec=`cygpath --path --unix "$sys_lib_search_path_spec"`
++    # Finally, convert to the space separated list, but filter out path names
++    # with invalid characters: They were created while 8.3 DOS file name
++    # creation was disabled for that partition.
++    lt_search_path_spec=$sys_lib_search_path_spec
++    sys_lib_search_path_spec=
++    lt_save_ifs=$IFS;
++    IFS=$PATH_SEPARATOR
++    for lt_path in $lt_search_path_spec
++    do
++      IFS=$lt_save_ifs
++      case $lt_path in
++      *[' ()']*)
++	{ $as_echo "$as_me:${as_lineno-$LINENO}: WARNING: missing 8.3 path name to find libs in $lt_path" >&5
++$as_echo "$as_me: WARNING: missing 8.3 path name to find libs in $lt_path" >&2;}
++	continue
++	;;
++      esac
++      sys_lib_search_path_spec="$sys_lib_search_path_spec${sys_lib_search_path_spec:+ }$lt_path"
++    done
++    IFS=$lt_save_ifs
++    ;;
++  esac
+ fi
+ library_names_spec=
+ libname_spec='lib$name'
+ soname_spec=
+ shrext_cmds=.so

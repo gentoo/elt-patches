@@ -179,6 +179,7 @@ elibtoolize() {
 		*-hpux*)    elt_patches+=" hpux-conf deplibs hc-flag-ld hardcode hardcode-relink relink-prog no-lc" ;;
 		*-irix*)    elt_patches+=" irix-ltmain" ;;
 		*-mint*)    elt_patches+=" mint-conf" ;;
+		*-winnt*)   elt_patches+=" winnt-conf winnt-ltmain" ;;
 	esac
 
 	if ${LD} --version 2>&1 | grep -qs 'GNU gold'; then
@@ -371,7 +372,7 @@ elibtoolize() {
 						ret=$?
 					fi
 					;;
-				aixrtl|hpux-conf)
+				aixrtl|hpux-conf|winnt-conf)
 					ret=1
 					local subret=0
 					# apply multiple patches as often as they match

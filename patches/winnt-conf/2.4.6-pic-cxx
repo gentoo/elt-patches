@@ -1,0 +1,18 @@
+--- configure
++++ configure
+@@ -16371,10 +16500,15 @@
+ 	  # Green Hills C++ Compiler
+ 	  # _LT_TAGVAR(lt_prog_compiler_static, CXX)="--no_auto_instantiation -u __main -u __premain -u _abort -r $COOL_DIR/lib/libOrb.a $MVME_DIR/lib/CC/libC.a $MVME_DIR/lib/classix/libcx.s.a"
+ 	  ;;
+ 	esac
+ 	;;
++      winnt*)
++	lt_prog_compiler_pic_CXX='-DDLL_EXPORT'
++	lt_prog_compiler_wl_CXX='-Wl,'
++	lt_prog_compiler_static_CXX='-static'
++	;;
+       mingw* | cygwin* | os2* | pw32* | cegcc*)
+ 	# This hack is so that the source file can tell whether it is being
+ 	# built for inclusion in a dll (and should export symbols for example).
+ 	lt_prog_compiler_pic_CXX='-DDLL_EXPORT'
+ 	;;

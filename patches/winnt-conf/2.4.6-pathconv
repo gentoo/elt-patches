@@ -1,0 +1,21 @@
+--- configure
++++ configure
+@@ -6040,16 +6040,16 @@
+ $as_echo_n "checking how to convert $build file names to $host format... " >&6; }
+ if ${lt_cv_to_host_file_cmd+:} false; then :
+   $as_echo_n "(cached) " >&6
+ else
+   case $host in
+-  *-*-mingw* )
++  *-*-mingw* | *-*-winnt* )
+     case $build in
+       *-*-mingw* ) # actually msys
+         lt_cv_to_host_file_cmd=func_convert_file_msys_to_w32
+         ;;
+-      *-*-cygwin* )
++      *-*-cygwin* | *-*-winnt* )
+         lt_cv_to_host_file_cmd=func_convert_file_cygwin_to_w32
+         ;;
+       * ) # otherwise, assume *nix
+         lt_cv_to_host_file_cmd=func_convert_file_nix_to_w32
+         ;;

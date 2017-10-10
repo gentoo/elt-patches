@@ -1,0 +1,15 @@
+--- configure
++++ configure
+@@ -10200,11 +10234,11 @@
+   # preloaded symbol tables.
+   # Exclude shared library initialization/finalization symbols.
+   extract_expsyms_cmds=
+ 
+   case $host_os in
+-  cygwin* | mingw* | pw32* | cegcc*)
++  cygwin* | mingw* | pw32* | cegcc* | winnt*)
+     # FIXME: the MSVC++ port hasn't been tested in a loooong time
+     # When not using gcc, we currently assume that we are using
+     # Microsoft Visual C++.
+     if test yes != "$GCC"; then
+       with_gnu_ld=no
