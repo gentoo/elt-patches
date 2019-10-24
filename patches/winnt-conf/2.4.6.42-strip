@@ -1,0 +1,30 @@
+--- configure
++++ configure
+@@ -13205,14 +13315,24 @@
+ if test -z "$STRIP"; then
+   { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+ $as_echo "no" >&6; }
+ else
+   if $STRIP -V 2>&1 | $GREP "GNU strip" >/dev/null; then
+-    old_striplib="$STRIP --strip-debug"
+-    striplib="$STRIP --strip-unneeded"
+-    { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
++    case $host_os in
++    winnt*)
++      # Stripping is not save here, since POSIXish host utils may
++      # be detected, but we operate on native windows libraries.
++      { $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
++$as_echo "no" >&6; }
++      ;;
++    *)
++      old_striplib="$STRIP --strip-debug"
++      striplib="$STRIP --strip-unneeded"
++      { $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+ $as_echo "yes" >&6; }
++      ;;
++    esac
+   else
+     case $host_os in
+     darwin*)
+       # FIXME - insert some real tests, host_os isn't really good enough
+       striplib="$STRIP -x"
