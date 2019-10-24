@@ -1,0 +1,11 @@
+--- configure
++++ configure
+@@ -24762,7 +24762,7 @@
+ 
+ if test "$enable_shared" = yes; then
+   case "$host_os" in
+-    mingw* | cygwin*) is_woe32dll=yes ;;
++    mingw* | cygwin* | winnt*) is_woe32dll=yes ;;
+     *) is_woe32dll=no ;;
+   esac
+ else
