@@ -179,7 +179,7 @@ elibtoolize() {
 		*-hpux*)    elt_patches+=" hpux-conf deplibs hc-flag-ld hardcode hardcode-relink relink-prog no-lc" ;;
 		*-irix*)    elt_patches+=" irix-ltmain" ;;
 		*-mint*)    elt_patches+=" mint-conf" ;;
-		*-winnt*)   elt_patches+=" winnt-conf winnt-ltmain" ;;
+		*-winnt*)   elt_patches+=" winnt-ltmain winnt-conf" ;;
 	esac
 
 	if ${LD} --version 2>&1 | grep -qs 'GNU gold'; then
@@ -285,6 +285,18 @@ elibtoolize() {
 						ELT_walk_patches "${d}/ltmain.sh" "${p}"
 						ret=$?
 					fi
+					;;
+				winnt-ltmain)
+					local version=$(ELT_libtool_version "${d}/ltmain.sh")
+					case ${version} in
+					2.4.6 | 2.4.6[' .']* )
+						ELT_walk_patches "${d}/ltmain.sh" "${p}"
+						ret=$?
+						;;
+					*)
+						die "${p}: need libtool 2.4.6+ (not ${version}) in ${d}"
+						;;
+					esac
 					;;
 				*)
 					ELT_walk_patches "${d}/ltmain.sh" "${p}"
