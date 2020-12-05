@@ -173,7 +173,7 @@ elibtoolize() {
 
 	case ${CHOST} in
 		*-aix*)     elt_patches+=" hardcode aixrtl" ;; #213277
-		*-darwin*)  elt_patches+=" darwin-ltconf darwin-ltmain darwin-conf" ;;
+		*-darwin*)  elt_patches+=" darwin-ltconf darwin-ltmain darwin-conf darwin20-conf" ;;
 		*-solaris*) elt_patches+=" sol2-conf sol2-ltmain" ;;
 		*-freebsd*) elt_patches+=" fbsd-conf fbsd-ltconf" ;;
 		*-hpux*)    elt_patches+=" hpux-conf deplibs hc-flag-ld hardcode hardcode-relink relink-prog no-lc" ;;
@@ -400,7 +400,7 @@ elibtoolize() {
 						fi
 					done
 					;;
-				mint-conf|gold-conf|sol2-conf)
+				mint-conf|gold-conf|sol2-conf|darwin20-conf)
 					ELT_walk_patches "${d}/configure" "${p}"
 					ret=$?
 					;;
