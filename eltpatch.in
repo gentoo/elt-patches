@@ -125,7 +125,10 @@ elibtoolize() {
 	local deptoremove=
 	local do_shallow="no"
 	local force="false"
-	local elt_patches="install-sh ltmain portage relink max_cmd_len sed test tmp cross as-needed target-nm ppc64le"
+	local elt_patches="
+		install-sh ltmain portage relink max_cmd_len sed test tmp cross as-needed target-nm ppc64le
+		fsanitize fuse-ld
+	"
 
 	for x in "$@" ; do
 		case ${x} in
