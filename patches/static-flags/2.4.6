@@ -1,0 +1,38 @@
+https://bugs.gentoo.org/812026
+https://lists.gnu.org/archive/html/libtool-patches/2019-05/msg00000.html
+
+From: Vincent Lefevre <vincent@vinc17.net>
+Subject: [PATCH] libtool: pass more flags to the linker
+Date: Fri, 3 May 2019 15:19:19 +0200
+To: libtool-patches@gnu.org
+
+Resolves bug 17750.
+
+* build-aux/ltmain.in (func_mode_link): In the flags to be passed through
+unchanged, also pass -static-* and -fcilkplus.
+
+Signed-off-by: Vincent Lefevre <vincent@vinc17.net>
+---
+ build-aux/ltmain.in | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 96b37003..c0e925bb 100644
+--- ltmain.sh
++++ ltmain.sh
+@@ -5380,10 +5380,12 @@ func_mode_link ()
+       # -stdlib=*            select c++ std lib with clang
+       # -fsanitize=*         Clang/GCC memory and address sanitizer
+       # -fuse-ld=*           Linker select flags for GCC
++      # -static-*            direct GCC to link specific libraries statically
++      # -fcilkplus           Cilk Plus language extension features for C/C++
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
+-      -specs=*|-fsanitize=*|-fuse-ld=*)
++      -specs=*|-fsanitize=*|-fuse-ld=*|-static-*|-fcilkplus)
+         func_quote_for_eval "$arg"
+ 	arg=$func_quote_for_eval_result
+         func_append compile_command " $arg"
+-- 
+2.20.1
