@@ -7,6 +7,8 @@ type -P gfind &>/dev/null && FIND=gfind || FIND=find
 type -P gpatch &>/dev/null && PATCH=gpatch || PATCH=patch
 type -P gsed &>/dev/null && SED=gsed || SED=sed
 
+: "${ELT_patchdir:=@ELT_patchdir@}"
+
 source "@ELT_gentoofuncs@" || exit 1
 
 die() {
@@ -74,7 +76,7 @@ ELT_walk_patches() {
 	local ret=1
 	local file=$1
 	local patch_set=$2
-	local patch_dir="@ELT_patchdir@/${patch_set}"
+	local patch_dir="${ELT_patchdir}/${patch_set}"
 	local rem_int_dep=$3
 
 	[[ -z ${patch_set} ]] && return 1
@@ -88,7 +90,7 @@ ELT_walk_patches() {
 		sed_args+=( -e "s|@REM_INT_DEP@|${rem_int_dep}|g" )
 	fi
 
-	pushd "@ELT_patchdir@" >/dev/null || die "pushd to elt-patch dir failed"
+	pushd "${ELT_patchdir}" >/dev/null || die "pushd to elt-patch dir failed"
 
 	# Go through the patches in reverse order (newer version to older)
 	for patch in $(${FIND} "${patch_set}" -maxdepth 1 -type f | LC_ALL=C sort -r) ; do
