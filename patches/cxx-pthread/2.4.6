@@ -1,0 +1,38 @@
+http://permalink.gmane.org/gmane.comp.gnu.libtool.patches/11704
+https://bugs.gentoo.org/650876
+
+From: Pavel Raiskup <praiskup <at> redhat.com>
+Subject: [PATCH] libtool: handle the -pthread{,s} options for g++
+Newsgroups: gmane.comp.gnu.libtool.patches
+Date: Thursday 28th November 2013 14:18:05 UTC (over 4 years ago)
+
+As we are forced to pass -nostdlib to g++ for linking, this option
+expectedly disables the effectiveness of passed -pthread flag - so
+add the -lpthread explicitly to $deplibs to link correctly.
+
+References:
+http://gcc.gnu.org/bugzilla/show_bug.cgi?id=25460
+https://bugzilla.redhat.com/show_bug.cgi?id=661333
+http://lists.gnu.org/archive/html/bug-libtool/2013-01/msg00018.htm
+
+* build-aux/ltmain.in (func_mode_link): Explicitly add -lpthread
+flag into $deplibs when -pthread is passed (for g++ only).
+--- a/ltmain.sh
++++ b/ltmain.sh
+@@ -7127,6 +7127,16 @@
+ 	    *" $arg "*) ;;
+ 	    * ) func_append new_inherited_linker_flags " $arg" ;;
+ 	esac
++
++	# As we are forced to pass -nostdlib to g++ during linking, the option
++	# -pthread{,s} is not in effect;  add the -lpthread to $deplist
++	# explicitly to link correctly.
++	if test "$tagname" = CXX -a x"$with_gcc" = xyes; then
++	  case "$arg" in
++	    -pthread*) func_append deplibs " -lpthread" ;;
++	  esac
++	fi
++
+ 	continue
+ 	;;
+ 
