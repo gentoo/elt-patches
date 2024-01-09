@@ -1,0 +1,12 @@
+--- ltmain.sh.bak	2024-01-09 01:44:40.796693940 +0000
++++ ltmain.sh	2024-01-09 01:45:13.455072670 +0000
+@@ -7304,7 +7304,8 @@
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
+-      -specs=*|-fsanitize=*|-fuse-ld=*|-static-*|-fcilkplus|-Werror|-Werror=*)
++      -specs=*|-fsanitize=*|-fuse-ld=*|-static-*|-fcilkplus|-Werror|-Werror=*| \
++      -fdiagnostics-color*|-frecord-gcc-switches)
+         func_quote_for_eval "$arg"
+ 	arg=$func_quote_for_eval_result
+         func_append compile_command " $arg"

@@ -1,0 +1,27 @@
+From 64baaf00e93b990154a53a1345be24c9d9bb25c5 Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Tue, 9 Jan 2024 01:40:56 +0000
+Subject: [PATCH] ltmain.in: Pass through -fdiagnostics-color,
+ -frecord-gcc-switches
+
+---
+ build-aux/ltmain.in | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index d5cf07a6..b372dc87 100644
+--- ltmain.in
++++ ltmain.in
+@@ -5363,7 +5363,8 @@ func_mode_link ()
+       # -stdlib=*            select c++ std lib with clang
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*)
++      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
++      -fdiagnostics-color*|-frecord-gcc-switches)
+         func_quote_for_eval "$arg"
+ 	arg=$func_quote_for_eval_result
+         func_append compile_command " $arg"
+-- 
+2.43.0
+
