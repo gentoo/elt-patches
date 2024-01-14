@@ -1,15 +1,19 @@
-From 64baaf00e93b990154a53a1345be24c9d9bb25c5 Mon Sep 17 00:00:00 2001
+https://lists.gnu.org/archive/html/libtool-patches/2024-01/msg00029.html
+https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=533d816dea307ad78c4e7ba16dcdec4c285b0bc8
+
+From 533d816dea307ad78c4e7ba16dcdec4c285b0bc8 Mon Sep 17 00:00:00 2001
 From: Sam James <sam@gentoo.org>
-Date: Tue, 9 Jan 2024 01:40:56 +0000
-Subject: [PATCH] ltmain.in: Pass through -fdiagnostics-color,
- -frecord-gcc-switches
+Date: Sun, 14 Jan 2024 06:27:33 +0000
+Subject: ltmain.in: Pass through -fdiagnostics-color, -frecord-gcc-switches
 
----
- build-aux/ltmain.in | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+* -fdiagnostics-color: who doesn't like color? No reason to strip it. This
+  makes the link phase stick out like a sore thumb if there's warnings emitted.
 
-diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
-index d5cf07a6..b372dc87 100644
+* -frecord-gcc-switches: we use it in Gentoo to check if a package respects
+  *FLAGS. Note that we do not need to include -grecord-gcc-switches explicitly
+  here as -g* is already whitelisted.
+
+* build-aux/ltmain.in: Handle -fdiagnostics-color* & -frecord-gcc-switches.
 --- ltmain.in
 +++ ltmain.in
 @@ -5363,7 +5363,8 @@ func_mode_link ()
