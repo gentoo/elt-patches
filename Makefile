@@ -1,4 +1,4 @@
-# Copyright 1999-2017 Gentoo Foundation
+# Copyright 1999-2023 Gentoo Authors
 # Distributed under the terms of the GNU General Public License v2
 
 DESTDIR =
@@ -25,6 +25,9 @@ eltpatch: eltpatch.in
 
 clean:
 	rm -f eltpatch
+
+check: eltpatch
+	cd tests && ./setup.sh && ./run.sh
 
 install-bin: eltpatch
 	install -d $(DESTDIR)$(bindir)
