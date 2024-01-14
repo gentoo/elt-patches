@@ -129,7 +129,7 @@ elibtoolize() {
 	local force="false"
 	local elt_patches="
 		install-sh ltmain portage relink max_cmd_len sed test tmp cross as-needed target-nm ppc64le
-		specs fsanitize fuse-ld static-flags werror cxx-pthread color-record
+		specs fsanitize fuse-ld static-flags werror cxx-pthread color-record sed-quote
 	"
 
 	for x in "$@" ; do
