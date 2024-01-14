@@ -1,3 +1,6 @@
+https://bugs.gnu.org/44605
+https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=9e8c882517082fe5755f2524d23efb02f1522490
+
 macOS Big Sur is 11.0, Darwin 20, after a long line of 10.X releases.
 macOS Monterey is 12.0.
 --- configure
