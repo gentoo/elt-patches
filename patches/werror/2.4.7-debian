@@ -1,0 +1,34 @@
+https://lists.gnu.org/archive/html/libtool-patches/2022-12/msg00000.html
+
+From eb8952bf6df858b144f2dc8b573782e25b527c01 Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Sat, 10 Dec 2022 02:00:22 +0000
+Subject: [PATCH] Allow -Werror and -Werror=* through flag filtering
+
+* build-aux/ltmain.in (func_mode_link): allow -Werror and -Werror=* through
+  flat filtering at link time.
+
+  This is needed for detecting likely-runtime problems with LTO using
+  e.g. -Werror=odr or -Werror=lto-type-mismatch.
+
+Bug: https://bugs.gentoo.org/884767
+Signed-off-by: Sam James <sam@gentoo.org>
+[rebased on top of Debian ltmain.sh]
+Signed-off-by: Eli Schwartz <eschwartz93@gmail.com>
+--- a/ltmain.sh
++++ b/ltmain.sh
+@@ -7564,10 +7564,11 @@ func_mode_link ()
+       # -static-*            direct GCC to link specific libraries statically
+       # -fcilkplus           Cilk Plus language extension features for C/C++
+       # -Wa,*                Pass flags directly to the assembler
++      # -Werror, -Werror=*   Report (specified) warnings as errors
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
+-      -specs=*|-fsanitize=*|-fuse-ld=*|-static-*|-fcilkplus|-Wa,*)
++      -specs=*|-fsanitize=*|-fuse-ld=*|-static-*|-fcilkplus|-Wa,*|-Werror|-Werror=*)
+         func_quote_arg pretty "$arg"
+ 	arg=$func_quote_arg_result
+         func_append compile_command " $arg"
+--
+2.43.0
