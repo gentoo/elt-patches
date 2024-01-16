@@ -1,0 +1,40 @@
+https://lists.gnu.org/archive/html/libtool-patches/2024-01/msg00029.html
+https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=533d816dea307ad78c4e7ba16dcdec4c285b0bc8
+
+From 50f97756e75da06269374fff455cb211c7cf5cda Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Sun, 14 Jan 2024 06:27:33 +0000
+Subject: ltmain.in: Pass through -fdiagnostics-color, -frecord-gcc-switches
+
+* -fdiagnostics-color: who doesn't like color? No reason to strip it. This
+  makes the link phase stick out like a sore thumb if there's warnings emitted.
+
+* -frecord-gcc-switches: we use it in Gentoo to check if a package respects
+  *FLAGS. Note that we do not need to include -grecord-gcc-switches explicitly
+  here as -g* is already whitelisted.
+
+* build-aux/ltmain.in: Handle -fdiagnostics-color* & -frecord-gcc-switches.
+
+[rebased on top of Debian ltmain.sh]
+Signed-off-by: Eli Schwartz <eschwartz93@gmail.com>
+--- ltmain.in
++++ ltmain.in
+@@ -7559,6 +7559,8 @@ func_mode_link ()
+       # -O*, -g*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+       # -specs=*             GCC specs files
+       # -stdlib=*            select c++ std lib with clang
++      # -fdiagnostics-color* simply affects output
++      # -frecord-gcc-switches used to verify flags were respected
+       # -fsanitize=*         Clang/GCC memory and address sanitizer
+       # -fuse-ld=*           Linker select flags for GCC
+       # -static-*            direct GCC to link specific libraries statically
+@@ -7568,6 +7570,7 @@ func_mode_link ()
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin|-fstack-protector*|-stdlib=*| \
++      -fdiagnostics-color*|-frecord-gcc-switches| \
+       -specs=*|-fsanitize=*|-fuse-ld=*|-static-*|-fcilkplus|-Wa,*|-Werror|-Werror=*)
+         func_quote_arg pretty "$arg"
+ 	arg=$func_quote_arg_result
+--
+2.43.0
