@@ -1,0 +1,34 @@
+https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=f9970d99293faf908fdc153a653fa5781095fb7a
+
+From f9970d99293faf908fdc153a653fa5781095fb7a Mon Sep 17 00:00:00 2001
+From: Mike Frysinger <vapier@gentoo.org>
+Date: Sat, 13 Feb 2016 02:14:29 -0500
+Subject: [PATCH] libtool: pass through -fuse-ld flags
+
+Starting with gcc-4.8, there's a -fuse-ld flag that can be used to
+select between bfd & gold.  Make sure we pass it through to the
+linking stage.
+
+* build-aux/ltmain.in (func_mode_link): Pass -fuse-ld=* flags
+through.
+Copyright-paperwork-exempt: Yes
+---
+ build-aux/ltmain.in | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 40eb0297f37d..26015641925e 100644
+--- ltmain.sh
++++ ltmain.sh
+@@ -5383,10 +5383,11 @@ func_mode_link ()
+       # -specs=*             GCC specs files
+       # -fsanitize=*         Clang/GCC memory and address sanitizer
++      # -fuse-ld=*           Linker select flags for GCC
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin| \
+-      -specs=*|-fsanitize=*)
++      -specs=*|-fsanitize=*|-fuse-ld=*)
+         func_quote_for_eval "$arg"
+ 	arg="$func_quote_for_eval_result"
+         func_append compile_command " $arg"

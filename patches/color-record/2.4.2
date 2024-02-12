@@ -1,0 +1,29 @@
+https://lists.gnu.org/archive/html/libtool-patches/2024-01/msg00029.html
+https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=533d816dea307ad78c4e7ba16dcdec4c285b0bc8
+
+From 533d816dea307ad78c4e7ba16dcdec4c285b0bc8 Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Sun, 14 Jan 2024 06:27:33 +0000
+Subject: ltmain.in: Pass through -fdiagnostics-color, -frecord-gcc-switches
+
+* -fdiagnostics-color: who doesn't like color? No reason to strip it. This
+  makes the link phase stick out like a sore thumb if there's warnings emitted.
+
+* -frecord-gcc-switches: we use it in Gentoo to check if a package respects
+  *FLAGS. Note that we do not need to include -grecord-gcc-switches explicitly
+  here as -g* is already whitelisted.
+
+* build-aux/ltmain.in: Handle -fdiagnostics-color* & -frecord-gcc-switches.
+--- ltmain.in
++++ ltmain.in
+@@ -5363,7 +5363,8 @@ func_mode_link ()
+       # -stdlib=*            select c++ std lib with clang
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+       -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin| \
+-      -specs=*|-fsanitize=*|-fuse-ld=*|-Werror|-Werror=*)
++      -specs=*|-fsanitize=*|-fuse-ld=*|-Werror|-Werror=*| \
++      -fdiagnostics-color*|-frecord-gcc-switches)
+         func_quote_for_eval "$arg"
+ 	arg="$func_quote_for_eval_result"
+         func_append compile_command " $arg"
