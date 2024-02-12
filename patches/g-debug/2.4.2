@@ -1,0 +1,29 @@
+From 9b726f35db98da01a7edaf143788cba2c2ae900a Mon Sep 17 00:00:00 2001
+From: Andreas Schwab <schwab@linux-m68k.org>
+Date: Tue, 21 Aug 2012 20:17:04 -0500
+Subject: [PATCH] Pass through -g* so that debugging information is not dropped
+
+* ltmain.m4sh (func_mode_link): Pass through -g*.
+
+Signed-off-by: Eli Schwartz <eschwartz93@gmail.com>
+---
+ build-aux/ltmain.m4sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/build-aux/ltmain.m4sh b/build-aux/ltmain.m4sh
+index 48e259b6..1d71f0e2 100644
+--- a/build-aux/ltmain.m4sh
++++ b/build-aux/ltmain.m4sh
+@@ -5090,11 +5090,11 @@ func_mode_link ()
+       # @file                GCC response files
+       # -tp=*                Portland pgcc target processor selection
+       # --sysroot=*          for sysroot support
+-      # -O*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
++      # -O*, -g*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+       -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
+-      -O*|-flto*|-fwhopr*|-fuse-linker-plugin)
++      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin)
+         func_quote_for_eval "$arg"
+ 	arg="$func_quote_for_eval_result"
+         func_append compile_command " $arg"
