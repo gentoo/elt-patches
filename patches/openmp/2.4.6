@@ -1,0 +1,36 @@
+https://lists.gnu.org/archive/html/libtool-patches/2024-03/msg00003.html
+https://bugs.gentoo.org/740310
+
+From cbe0f31e92142b624da92487ceed6b95e948f726 Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Sun, 24 Mar 2024 08:24:30 +0000
+Subject: [PATCH] ltmain.in: Pass through -fopenmp=*
+
+Clang uses -fopenmp=* to allow choosing between libgomp and libomp.
+
+* build-aux/ltmain.in: Pass through -fopenmp=*.
+
+Signed-off-by: Sam James <sam@gentoo.org>
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -5159,7 +5159,7 @@ func_mode_link ()
+ 	;;
+ 
+       -mt|-mthreads|-kthread|-Kthread|-pthread|-pthreads|--thread-safe \
+-      |-threads|-fopenmp|-openmp|-mp|-xopenmp|-omp|-qsmp=*)
++      |-threads|-fopenmp|-fopenmp=*|-openmp|-mp|-xopenmp|-omp|-qsmp=*)
+ 	func_append compiler_flags " $arg"
+ 	func_append compile_command " $arg"
+ 	func_append finalize_command " $arg"
+@@ -5693,7 +5693,7 @@ func_mode_link ()
+ 	found=false
+ 	case $deplib in
+ 	-mt|-mthreads|-kthread|-Kthread|-pthread|-pthreads|--thread-safe \
+-        |-threads|-fopenmp|-openmp|-mp|-xopenmp|-omp|-qsmp=*)
++        |-threads|-fopenmp|-fopenmp=*|-openmp|-mp|-xopenmp|-omp|-qsmp=*)
+ 	  if test prog,link = "$linkmode,$pass"; then
+ 	    compile_deplibs="$deplib $compile_deplibs"
+ 	    finalize_deplibs="$deplib $finalize_deplibs"
+-- 
+2.44.0
+
