@@ -217,7 +217,7 @@ elibtoolize() {
 		fi
 
 		# patching ltmain.sh
-		[[ -f ${d}/ltmain.sh ]] &&
+		[[ -f ${d}/ltmain.sh ]] && sed -n '1p' ${d}/ltmain.sh | grep -qsv '/dev/null' &&
 		for p in ${elt_patches} ; do
 			ret=0
 
