@@ -1,0 +1,39 @@
+From ebe94942061d632ca2a6fa86cdebdf72c7863c07 Mon Sep 17 00:00:00 2001
+From: Sam James <sam@gentoo.org>
+Date: Mon, 15 Apr 2024 07:15:15 +0100
+Subject: [PATCH] ltmain.in: don't suppress output for PIC compilations
+
+I just hit this in a fascinating place.
+
+When working on xz, I set `-Werror=suggest-attribute=returns_nonnull`, and
+the build failed (as I expected it to), but with no visible error from
+the compiler.
+
+There's a mysterious '>/dev/null 2>&1' on the second line where
+liblzma_la-common.o is built without PIC.
+
+With -fPIC, IPA doesn't end up doing attribute discovery. Without it,
+it does. This behaviour is insane and we should patch it out.
+
+Bug: https://bugs.gentoo.org/135865
+Signed-off-by: Sam James <sam@gentoo.org>
+---
+ build-aux/ltmain.in | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index 090a4fe8..e383e4cb 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -1665,8 +1665,6 @@ compiler."
+ 	func_append command " -o $obj"
+       fi
+ 
+-      # Suppress compiler output if we already did a PIC compilation.
+-      func_append command "$suppress_output"
+       func_show_eval_locale "$command" \
+         '$opt_dry_run || $RM $removelist; exit $EXIT_FAILURE'
+ 
+-- 
+2.44.0
+
