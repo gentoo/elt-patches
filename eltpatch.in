@@ -129,7 +129,7 @@ elibtoolize() {
 	local force="false"
 	local elt_patches="
 		install-sh ltmain portage relink max_cmd_len sed test tmp cross as-needed target-nm ppc64le
-		g-debug specs fsanitize fuse-ld static-flags werror cxx-pthread color-record sed-quote openmp verbose-pic fix-file-check
+		g-debug specs fsanitize fuse-ld static-flags werror cxx-pthread color-record sed-quote openmp verbose-pic fix-file-check clang-runtime-ltmain clang-runtime
 	"
 
 	for x in "$@" ; do
@@ -418,6 +418,10 @@ elibtoolize() {
 					ret=$?
 					;;
                 fix-file-check)
+					ELT_walk_patches "${d}/configure" "${p}"
+					ret=$?
+					;;
+                clang-runtime)
 					ELT_walk_patches "${d}/configure" "${p}"
 					ret=$?
 					;;
