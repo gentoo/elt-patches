@@ -1,0 +1,33 @@
+https://github.com/chimera-linux/cports/blob/master/main/libtool/patches/cxx-clang-runtimes.patch
+https://lists.gnu.org/archive/html/libtool-patches/2021-10/msg00016.html
+https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=1d2577357ee704da2d6d7c7da119ad82ba8ca172
+https://git.savannah.gnu.org/cgit/libtool.git/commit/?id=6132006b5fb6b95f31c30a972fbb829f93e1878b
+
+https://bugs.gentoo.org/914068
+
+From 969258b1b25b5b0f78a2a0a2427c4dd4b038f13f Mon Sep 17 00:00:00 2001
+From: q66 <q66@chimera-linux.org>
+Date: Sat, 3 Sep 2022 09:41:45 +0000
+Subject: [PATCH] permit clang builtins library to be linked in
+
+libtool links c++ stuff with -nostdlib and manually extracts the
+allowed libs, but this did not previously cover the clang runtimes
+and broke builds on some targets where builtins are needed.
+
+diff --git a/build-aux/ltmain.in b/build-aux/ltmain.in
+index a5f21a1..e1d4d81 100644
+--- a/build-aux/ltmain.in
++++ b/build-aux/ltmain.in
+@@ -5900,6 +5900,12 @@ func_mode_link ()
+ 	  lib)
+ 	    # Linking convenience modules into shared libraries is allowed,
+ 	    # but linking other static libraries is non-portable.
++	    case "$deplib" in
++	      */libclang_rt*.$libext)
++	        deplibs="$deplib $deplibs"
++	        continue
++	      ;;
++	    esac
+ 	    case " $dlpreconveniencelibs " in
+ 	    *" $deplib "*) ;;
+ 	    *)
