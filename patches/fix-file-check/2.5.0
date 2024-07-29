@@ -1,0 +1,36 @@
+https://lists.gnu.org/archive/html/libtool-patches/2024-06/msg00000.html
+
+Diffed genereated configure without patch and with patch.
+
+--- configure   2024-07-29 21:14:28.848124370 +0300
++++ configure   2024-07-29 21:15:32.329013530 +0300
+@@ -8106,7 +8106,8 @@
+   ac_cv_prog_FILECMD="$FILECMD" # Let the user override the test.
+ else
+ as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+-for as_dir in $PATH
++as_dummy=":"
++for as_dir in $as_dummy
+ do
+   IFS=$as_save_IFS
+   case $as_dir in #(((
+@@ -8152,7 +8153,8 @@
+   ac_cv_prog_ac_ct_FILECMD="$ac_ct_FILECMD" # Let the user override the test.
+ else
+ as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+-for as_dir in $PATH
++as_dummy=":"
++for as_dir in $as_dummy
+ do
+   IFS=$as_save_IFS
+   case $as_dir in #(((
+@@ -8183,7 +8185,7 @@
+ fi
+ 
+   if test "x$ac_ct_FILECMD" = x; then
+-    FILECMD=":"
++    FILECMD="file"
+   else
+     case $cross_compiling:$ac_tool_warned in
+ yes:)
+
