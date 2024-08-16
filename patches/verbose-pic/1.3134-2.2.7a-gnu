@@ -1,3 +1,5 @@
+https://lists.gnu.org/archive/html/libtool-patches/2024-08/msg00000.html
+
 From: Sam James <sam@gentoo.org>
 Date: Sun, 21 Jul 2024 13:33:17 +0100
 Subject: [PATCH] ltmain.in: don't suppress output for PIC compilations
