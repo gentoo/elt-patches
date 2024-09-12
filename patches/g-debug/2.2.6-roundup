@@ -1,0 +1,35 @@
+Roundup of a few more options, to unlock the entire series.
+- tp
+- sysroot
+- O, flto, fwhopr, fuse-linker-plugin
+
+From fbd9b32ef2bdf52729e29423732cc5c2fd4be563 Mon Sep 17 00:00:00 2001
+From: Andreas Schwab <schwab@linux-m68k.org>
+Date: Tue, 21 Aug 2012 20:17:04 -0500
+Subject: [PATCH] Pass through -g* so that debugging information is not dropped
+
+* ltmain.m4sh (func_mode_link): Pass through -g*.
+
+Signed-off-by: Eli Schwartz <eschwartz93@gmail.com>
+---
+ ltmain.sh | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/ltmain.sh b/ltmain.sh
+index 247c739..61e3eaf 100644
+--- a/ltmain.sh
++++ b/ltmain.sh
+@@ -4796,8 +4796,12 @@ func_mode_link ()
+       # -F/path gives path to uninstalled frameworks, gcc on darwin
+       # -p, -pg, --coverage, -fprofile-* pass through profiling flag for GCC
+       # @file GCC response files
++      # -tp=*                Portland pgcc target processor selection
++      # --sysroot=*          for sysroot support
++      # -O*, -g*, -flto*, -fwhopr*, -fuse-linker-plugin GCC link-time optimization
+       -64|-mips[0-9]|-r[0-9][0-9]*|-xarch=*|-xtarget=*|+DA*|+DD*|-q*|-m*| \
+-      -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*)
++      -t[45]*|-txscale*|-p|-pg|--coverage|-fprofile-*|-F*|@*|-tp=*|--sysroot=*| \
++      -O*|-g*|-flto*|-fwhopr*|-fuse-linker-plugin)
+         func_quote_for_eval "$arg"
+ 	arg="$func_quote_for_eval_result"
+         func_append compile_command " $arg"
