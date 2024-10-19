@@ -61,9 +61,9 @@ ELT_try_and_apply_patch() {
 #
 ELT_libtool_version() {
 	(
-	unset VERSION
-	eval $(grep -e '^[[:space:]]*VERSION=' "$1")
-	echo "${VERSION:-0}"
+		unset VERSION
+		eval $(grep -e '^[[:space:]]*VERSION=' "$1")
+		echo "${VERSION:-0}"
 	)
 }
 
@@ -333,8 +333,8 @@ elibtoolize() {
 							fi
 						else
 							if grep -qs 'We do not want portage' "${d}/ltmain.sh" ; then
-							#	ewarn "  Portage patch seems to be already applied."
-							#	ewarn "  Please verify that it is not needed."
+								#ewarn "  Portage patch seems to be already applied."
+								#ewarn "  Please verify that it is not needed."
 								:
 							else
 								local version=$(ELT_libtool_version "${d}"/ltmain.sh)
@@ -417,11 +417,11 @@ elibtoolize() {
 					ELT_walk_patches "${d}/configure" "${p}"
 					ret=$?
 					;;
-                fix-file-check)
+				fix-file-check)
 					ELT_walk_patches "${d}/configure" "${p}"
 					ret=$?
 					;;
-                clang-runtime)
+				clang-runtime)
 					ELT_walk_patches "${d}/configure" "${p}"
 					ret=$?
 					;;
