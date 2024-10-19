@@ -25,6 +25,8 @@ eltpatch: eltpatch.in
 
 clean:
 	rm -f eltpatch
+	rm -rf tests/*.tmp
+	rm -rf tests/libtools
 
 check: eltpatch
 	cd tests && ./setup.sh && ./run.sh
