@@ -7,7 +7,8 @@ on: [pull_request, push]
 
 jobs:
   make:
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
+    container: gentoo/stage3
     steps:
     - name: Install dependencies
       run: |
