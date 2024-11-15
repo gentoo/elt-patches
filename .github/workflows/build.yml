@@ -7,12 +7,13 @@ on: [pull_request, push]
 
 jobs:
   make:
+    runs-on: [ubuntu-latest]
     steps:
     - name: Install dependencies
       run: |
         sudo apt-get update
         sudo apt-get install -y build-essential autoconf
     - uses: actions/checkout@v4
-      name: Run tests
+    - name: Run tests
       run: |
         make check
